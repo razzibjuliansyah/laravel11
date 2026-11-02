@@ -2,8 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\AuthController;
 
-// Rute Publik (Akses Umum)
+// ==========================================
+// RUTE PUBLIK (Akses Umum)
+// ==========================================
 Route::get('/', function () {
     return view('page.home');
 })->name('home');
@@ -19,12 +22,26 @@ Route::get('/contact', function () {
     return view('page.contact');
 })->name('contact');
 
-// Rute Admin (Panel Admin & CRUD)
-Route::prefix('admin')->group(function () {
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+// ==========================================
+// RUTE AUTHENTICATION (Login & Logout)
+// ==========================================
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// ==========================================
+// RUTE ADMIN (Dilindungi Middleware Auth & Prefiks /admin)
+// ==========================================
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    
+    // Dashboard Admin (Menjadi halaman pertama yang diakses setelah login)
+    Route::get('/', [AuthController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/dashboard', [AuthController::class, 'dashboard']);
+
+    // Halaman Profil (Mengarah ke view page.profile milik mahasiswa)
+    Route::get('/profile', [AuthController::class, 'profile'])->name('admin.profile');
+
+    // CRUD Projects Admin (Dengan fitur Search)
     Route::get('/projects', [ProjectController::class, 'adminIndex'])->name('admin.projects.index');
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('admin.projects.create');
     Route::post('/projects', [ProjectController::class, 'store'])->name('admin.projects.store');
@@ -32,8 +49,3 @@ Route::prefix('admin')->group(function () {
     Route::put('/projects/{id}', [ProjectController::class, 'update'])->name('admin.projects.update');
     Route::delete('/projects/{id}', [ProjectController::class, 'destroy'])->name('admin.projects.destroy');
 });
-
-// Logout Sederhana
-Route::post('/logout', function () {
-    return redirect('/');
-})->name('logout');

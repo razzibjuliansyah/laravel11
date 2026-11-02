@@ -9,6 +9,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            AdminSeeder::class,
+        ]);
+
         Project::create([
             'title' => 'Sistem ERP Tes',
             'tech' => 'PHP, Laravel',
