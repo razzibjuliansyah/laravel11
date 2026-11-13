@@ -41,10 +41,14 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // Halaman Profil (Mengarah ke view page.profile milik mahasiswa)
     Route::get('/profile', [AuthController::class, 'profile'])->name('admin.profile');
 
-    // CRUD Projects Admin (Dengan fitur Search)
+    // CRUD Projects Admin & Cetak PDF
     Route::get('/projects', [ProjectController::class, 'adminIndex'])->name('admin.projects.index');
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('admin.projects.create');
     Route::post('/projects', [ProjectController::class, 'store'])->name('admin.projects.store');
+    
+    // Rute Cetak PDF (Diletakkan sebelum parameter {id} agar tidak bentrok)
+    Route::get('/projects/pdf', [ProjectController::class, 'exportPdf'])->name('admin.projects.pdf');
+
     Route::get('/projects/{id}/edit', [ProjectController::class, 'edit'])->name('admin.projects.edit');
     Route::put('/projects/{id}', [ProjectController::class, 'update'])->name('admin.projects.update');
     Route::delete('/projects/{id}', [ProjectController::class, 'destroy'])->name('admin.projects.destroy');

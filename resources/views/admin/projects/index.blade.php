@@ -4,7 +4,10 @@
 <div class="bg-white p-4 rounded shadow-sm">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold m-0" style="font-size: 1.75rem;">Data Projects</h2>
-        <a href="{{ route('admin.projects.create') }}" class="btn btn-primary fw-bold px-3">Tambah Project</a>
+        <div>
+            <a href="{{ route('admin.projects.create') }}" class="btn btn-primary fw-bold px-3 me-2">Tambah Project</a>
+            <a href="{{ route('admin.projects.pdf') }}" target="_blank" class="btn btn-danger fw-bold px-3">Cetak PDF</a>
+        </div>
     </div>
 
     @if(session('success'))
